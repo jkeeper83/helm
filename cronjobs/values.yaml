@@ -1,0 +1,46 @@
+namespace: default
+
+configMap:
+  name: &configMapName tools-cronjob
+
+cronjob:
+  name: &cronJobName cronjob-one
+  labels: cronjob-one
+
+  taskParmeters:
+    schedule: "59 23 * * 5"
+    concurrencyPolicy: "Replace"
+    failed_jobs_history_limit: 1
+    startingDeadlineSeconds: 10
+    successfulJobsHistoryLimit: 1
+
+  container:
+    image: "busybox"
+    imagePullPolicy: "IfNotPresent"
+    command: ["/bin/sh", "-c", "/script/sample-1.sh"]
+  
+  restartPolicy: Never
+
+  env:
+    - name: SAMPLE
+      value: VALUE
+    - name: SECOND_SAMPLE
+      value: SECOND_VALUE
+    - name: SECRET_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: sample-secret
+          key: username
+          optional: false      
+
+  volumeMounts: 
+    - name: *cronJobName
+      mountPath: "script/sample-1.sh"
+      subPath: "sample-1.sh"
+      
+  volumes:
+    - name: *cronJobName
+      configMap:
+        name: *configMapName
+        defaultMode: 0755
+        optional: false  

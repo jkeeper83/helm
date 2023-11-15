@@ -1,0 +1,10 @@
+apiVersion: v2
+name: cronjobs-template
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+icon: "https://helm.sh/img/helm.svg"
+maintainers:
+- name: jkeeper83
+  email: jkeeper83@outlook.es
